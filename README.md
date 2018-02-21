@@ -11,7 +11,7 @@ On a fresh ubuntu server 16.04 LTS installation, perform the following steps, in
 2. `adduser pool`
 3. `su pool`
 4. `cd /home/pool`
-5. `git clone https://github.com/kbs1/openxdagpool-scripts.git scripts`
+5. `git clone https://github.com/XDagger/openxdagpool-scripts.git scripts`
 6. `git clone https://github.com/XDagger/xdag.git xdag1`
 7. `git clone https://github.com/XDagger/xdag.git xdag2` (TWO separate working copies are necessary for proper pool operation)
 8. `echo -n 1 > ~/CURRENT_XDAG`
@@ -43,19 +43,19 @@ Done. Your software should now periodically export necessary files to the nginx 
 As a last thing, copy `wwwscripts/balance.php` into `/var/www/pool` directory. Make sure the file is owned by `pool` user and is executable.
 
 # Partial setup
-If you already run your pool daemon by any means, only necessary additions for the [OpenXDAGPool](https://github.com/kbs1/openxdagpool) to work properly
+If you already run your pool daemon by any means, only necessary additions for the [OpenXDAGPool](https://github.com/XDagger/openxdagpool) to work properly
 are the three CRON scripts mentioned in the chapter above (`xdag_dump_fastdata.sh`, `xdag_dump_slowdata.sh` and `xdag_delete_tmp_files.sh`). The last one
 (`xdag_delete_tmp_files.sh`) is only required to keep your hard drive space in check, by deleting unnecessary tmp files created by the pool daemon.
 
-Tweak the scripts to export data from your pool daemon. Nginx is required so these text files are downloadable by [OpenXDAGPool](https://github.com/kbs1/openxdagpool).
+Tweak the scripts to export data from your pool daemon. Nginx is required so these text files are downloadable by [OpenXDAGPool](https://github.com/XDagger/openxdagpool).
 
 As for balance checking, you are not required to use `wwwscripts/balance.php`, you can use any other balance checker that *contains* compatible output (`x.xxxxxxxxx` - the address in question balance with 9 decimal places) and
-can accept XDAG address in question as a GET / route parameter. The balance checker URL is configurable in [OpenXDAGPool's](https://github.com/kbs1/openxdagpool) `.env` file.
+can accept XDAG address in question as a GET / route parameter. The balance checker URL is configurable in [OpenXDAGPool's](https://github.com/XDagger/openxdagpool) `.env` file.
 
 # Usage
 To use these scripts, always `su pool`,  `cd`, `cd scripts` and then run `./xdag_....` as you need, or execute `./xdag_....` in particular xdag directory to interact with desired xdag daemon.
 
-NEVER delete your xdag.log file, only if you are certain the [OpenXDAGPool](https://github.com/kbs1/openxdagpool) has already imported all payouts in that log file. If not, you will lose some of your payouts history. It is safe to delete an xdag.log file for currently unused daemon that's not been in use for more than 3 days, assuming all services (cron exports and website imports) are running properly.
+NEVER delete your xdag.log file, only if you are certain the [OpenXDAGPool](https://github.com/XDagger/openxdagpool) has already imported all payouts in that log file. If not, you will lose some of your payouts history. It is safe to delete an xdag.log file for currently unused daemon that's not been in use for more than 3 days, assuming all services (cron exports and website imports) are running properly.
 
 If your pool is already running for a long time and you have your all-time `xdag.log` file(s), tweak the `generate_last_days_regex.php` file by uncommenting marked line, then wait for OpenXDAG pool to import your payouts. This happens every 3 hours. After this is done, you can safely comment the line back to keep importing only the latest payouts.
 
