@@ -12,5 +12,5 @@ cd ..
 CURRENTXDAG="`cat ~/CURRENT_XDAG`"
 
 echo "Starting console (xdag$CURRENTXDAG)..."
-cd ./xdag"$CURRENTXDAG"/client
+cd ~/xdag"$CURRENTXDAG"/client
 ./xdag_console.sh
