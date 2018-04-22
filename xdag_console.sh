@@ -9,7 +9,7 @@ fi
 
 cd ..
 
-CURRENTXDAG="`cat ./CURRENT_XDAG`"
+CURRENTXDAG="`cat ~/CURRENT_XDAG`"
 
 echo "Starting console (xdag$CURRENTXDAG)..."
 cd ./xdag"$CURRENTXDAG"/client
