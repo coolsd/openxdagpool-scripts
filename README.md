@@ -7,21 +7,22 @@ how xdag pool daemons work in general and be familiar with their settings. This 
 
 # Full setup
 On a fresh ubuntu server 16.04 LTS installation, perform the following steps, initially as `root`:
-1. `apt-get install git nginx php7.0-fpm php7.0-cli build-essential libssl-dev gcc`
-2. `adduser pool`
-3. `su pool`
-4. `cd /home/pool`
-5. `git clone https://github.com/XDagger/openxdagpool-scripts.git scripts`
-6. `git clone https://github.com/XDagger/xdag.git xdag1`
-7. `git clone https://github.com/XDagger/xdag.git xdag2` (TWO separate working copies are necessary for proper pool operation)
-8. `echo -n 1 > ~/CURRENT_XDAG`
-9. make sure `/var/www/pool` exists and is owned by `pool`
-10. make sure a new php7.0-fpm pool is running as user `pool`
-11. make sure nginx config allows execution of `php` files
+1. set your system timezone to `UTC`, execute `dpkg-reconfigure tzdata` and choose UTC
+2. `apt-get install git nginx php7.0-fpm php7.0-cli build-essential libssl-dev gcc`
+3. `adduser pool`
+4. `su pool`
+5. `cd /home/pool`
+6. `git clone https://github.com/XDagger/openxdagpool-scripts.git scripts`
+7. `git clone https://github.com/XDagger/xdag.git xdag1`
+8. `git clone https://github.com/XDagger/xdag.git xdag2` (TWO separate working copies are necessary for proper pool operation)
+9. `echo -n 1 > ~/CURRENT_XDAG`
+10. make sure `/var/www/pool` exists and is owned by `pool`
+11. make sure a new php7.0-fpm pool is running as user `pool`
+12. make sure nginx config allows execution of `php` files
 
 Once this is done, compile both xdag1 and xdag2 using `make`. Compile as user `pool`. Execute xdag1 with proper pool command line as user `pool`,
-for example `TZ=GMT ./xdag -d -p 95.105.233.208:16775 -P 95.105.233.208:13654:20000:0.5:1:1:200:0.5`. Set up
-your password, type random keys (at least 3 lines of random keys), wait for the deamon to fully sync with the newtwork.
+for example `TZ=GMT ./xdag -d -p 95.105.233.208:16775 -P 95.105.233.208:13654:20000:0.5:1:1:200:0.5`. Instead of `95.105.233.208` use your own external IP.
+Set up your password, type random keys (at least 3 lines of random keys), wait for the deamon to fully sync with the newtwork.
 Then quit the daemon by typing `terminate`.
 
 Enter the `xdag2/client` directory (still as user `pool`) and copy `wallet.dat`, `dnet_key.dat` from `xdag1/client`.
@@ -51,6 +52,8 @@ Tweak the scripts to export data from your pool daemon. Nginx is required so the
 
 As for balance checking, you are not required to use `wwwscripts/balance.php`, you can use any other balance checker that *contains* compatible output (`x.xxxxxxxxx` - the address in question balance with 9 decimal places) and
 can accept XDAG address in question as a GET / route parameter. The balance checker URL is configurable in [OpenXDAGPool's](https://github.com/XDagger/openxdagpool) `.env` file.
+
+Make sure your system timezone is set to `UTC`. This helps to keep payouts and blocks export imported evry ~4 hours. [OpenXDAGPool](https://github.com/XDagger/openxdagpool) runs internally in `UTC` timezone.
 
 # Usage
 To use these scripts, always `su pool`,  `cd`, `cd scripts` and then run `./xdag_....` as you need, or execute `./xdag_....` in particular xdag directory to interact with desired xdag daemon.
