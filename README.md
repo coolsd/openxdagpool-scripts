@@ -53,7 +53,7 @@ Tweak the scripts to export data from your pool daemon. Nginx is required so the
 As for balance checking, you are not required to use `wwwscripts/balance.php`, you can use any other balance checker that *contains* compatible output (`x.xxxxxxxxx` - the address in question balance with 9 decimal places) and
 can accept XDAG address in question as a GET / route parameter. The balance checker URL is configurable in [OpenXDAGPool's](https://github.com/XDagger/openxdagpool) `.env` file.
 
-Make sure your system timezone is set to `UTC`. This helps to keep payouts and blocks export imported evry ~4 hours. [OpenXDAGPool](https://github.com/XDagger/openxdagpool) runs internally in `UTC` timezone.
+Make sure your system timezone is set to `UTC`. This helps to keep payouts and blocks export imported every ~4 hours. [OpenXDAGPool](https://github.com/XDagger/openxdagpool) runs internally in `UTC` timezone.
 
 # Usage
 To use these scripts, always `su pool`,  `cd`, `cd scripts` and then run `./xdag_....` as you need, or execute `./xdag_....` in particular xdag directory to interact with desired xdag daemon.
