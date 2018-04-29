@@ -7,7 +7,7 @@ how xdag pool daemons work in general and be familiar with their settings. This 
 
 # Full setup
 On a fresh ubuntu server 16.04 LTS installation, perform the following steps, initially as `root`:
-1. set your system timezone to `UTC`, execute `dpkg-reconfigure tzdata` and choose UTC
+1. set your system timezone to `UTC`, execute `dpkg-reconfigure tzdata` and choose `UTC`
 2. `apt-get install git nginx php7.0-fpm php7.0-cli build-essential libssl-dev gcc`
 3. `adduser pool`
 4. `su pool`
