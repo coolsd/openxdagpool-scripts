@@ -58,9 +58,13 @@ Make sure your system timezone is set to `UTC`. This helps to keep payouts and b
 # Usage
 To use these scripts, always `su pool`,  `cd`, `cd scripts` and then run `./xdag_....` as you need, or execute `./xdag_....` in particular xdag directory to interact with desired xdag daemon.
 
-NEVER delete your xdag.log file, only if you are certain the [OpenXDAGPool](https://github.com/XDagger/openxdagpool) has already imported all payouts and found blocks in that log file. If not, you will lose some of your payouts and found blocks history. It is safe to delete an xdag.log file for currently unused daemon that's not been in use for more than 3 days, assuming all services (cron exports and website imports) are running properly.
+NEVER delete your `xdag.log*` file, only if you are certain the [OpenXDAGPool](https://github.com/XDagger/openxdagpool) has already imported all payouts and found blocks in that log file. If not, you will lose some of your payouts and found blocks history. It is safe to delete `xdag.log*` file for currently unused daemon that's not been in use for more than 3 days, assuming all services (cron exports and website imports) are running properly. See next section for details.
 
-If your pool is already running for a long time and you have your all-time `xdag.log` file(s), tweak the `generate_last_days_regex.php` file by uncommenting marked line, then wait for OpenXDAG pool to import your payouts and found blocks. This happens every 3 hours. After this is done, you can safely comment the line back to keep importing only the latest payouts and found blocks.
+If your pool is already running for a long time and you have your all-time `xdag.log*` file(s), tweak the `generate_last_days_regex.php` file by uncommenting marked line, then wait for OpenXDAG pool to import your payouts and found blocks. This happens every 3 hours. After this is done, you can safely comment the line back to keep importing only the latest payouts and found blocks.
+
+# Notes on xdag log files
+You can archive old log files at runtime to another partition, to conserve disk space. Execute `mv xdag.log xdag.log.20180516` or similar unique name in current `xdag` folder. Leave the old file in-place for 3 days. After this period, the file was definitely grepped by [OpenXDAGPool-scripts](https://github.com/XDagger/openxdagpool-scripts), and can be safely moved elsewhere.
+`xdag_dump_slowdata.sh` script always scans `xdag.log*` files in each `xdag` folder, making sure your old log files can be imported before you move them somewhere else.
 
 # Pool updates
 Update pool by updating and running xdag that is currently NOT stored in `CURRENT_XDAG`. `cd` to desired xdag directory as user `pool` and type `./xdag_update.sh` or `git pull` and `make` manually. Run `./xdag_run.sh`, run daemon with `-r` option.
