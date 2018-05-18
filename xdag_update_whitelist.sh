@@ -30,9 +30,15 @@ grep -Pha "^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}:[0-9]{1,5}$" /var/www
 LINES1="`wc -l /var/www/pool/netdb-white.txt | cut -d ' ' -f 1`"
 LINES2="`wc -l /var/www/pool/netdb-filtered.txt | cut -d ' ' -f 1`"
 
-if [ "$LINES1" != "$LINES2" ]; then
-	echo "Wrong whitelist format ($LINES1 vs $LINES2 lines), not updating whitelist."
+if [ "$LINES1" == "0" ]; then
 	rm /var/www/pool/netdb-white.txt /var/www/pool/netdb-filtered.txt
+	echo "Wrong whitelist format (whitelist is empty), not updating whitelist."
+	exit 4
+fi
+
+if [ "$LINES1" != "$LINES2" ]; then
+	rm /var/www/pool/netdb-white.txt /var/www/pool/netdb-filtered.txt
+	echo "Wrong whitelist format ($LINES1 vs $LINES2 lines), not updating whitelist."
 	exit 4
 fi
 
