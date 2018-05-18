@@ -54,7 +54,7 @@ while read -u 10 LINE; do
 		exit 5
 	fi
 
-	if ["$BYTE1" -gt 255 ]; then
+	if [ "$BYTE1" -gt 255 ]; then
 		rm /var/www/pool/netdb-filtered.txt
 		echo "IP address $IP invalid first byte, not updating whitelist."
 		exit 6
