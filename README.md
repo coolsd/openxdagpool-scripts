@@ -21,7 +21,7 @@ On a fresh ubuntu server 16.04 LTS installation, perform the following steps, in
 12. make sure nginx config allows execution of `php` files
 
 Once this is done, compile both xdag1 and xdag2 using `make`. Compile as user `pool`. Execute xdag1 with proper pool command line as user `pool`,
-for example `TZ=GMT ./xdag -d -p 95.105.233.208:16775 -P 95.105.233.208:13654:20000:0.5:1:1:200:0.5`. Instead of `95.105.233.208` use your own external IP.
+for example `TZ=GMT ./xdag -d -p 95.105.233.208:16775 -P 95.105.233.208:13654:20000:2000:450:1:1:1:1`. Instead of `95.105.233.208` use your own external IP.
 Set up your password, type random keys (at least 3 lines of random keys), wait for the deamon to fully sync with the newtwork.
 Then quit the daemon by typing `terminate`.
 
@@ -36,17 +36,18 @@ Next type `crontab -e` as user `pool` and enter the following cron schedule:
 ```
 */5 * * * * /bin/bash /home/pool/scripts/xdag_dump_fastdata.sh
 3 */3 * * * /bin/bash /home/pool/scripts/xdag_dump_slowdata.sh
+40 */3 * * * /bin/bash /home/pool/scripts/xdag_update_whitelist.sh
 50 2 * * * /bin/bash /home/pool/scripts/xdag_delete_tmp_files.sh
 
 ```
-Done. Your software should now periodically export necessary files to the nginx public webroot directory.
+Done. Your software should now periodically export necessary files to the nginx public webroot directory and update the pools `netdb-white.txt`.
 
 As a last thing, copy `wwwscripts/balance.php` into `/var/www/pool` directory. Make sure the file is owned by `pool` user and is executable.
 
 # Partial setup
 If you already run your pool daemon by any means, only necessary additions for the [OpenXDAGPool](https://github.com/XDagger/openxdagpool) to work properly
-are the three CRON scripts mentioned in the chapter above (`xdag_dump_fastdata.sh`, `xdag_dump_slowdata.sh` and `xdag_delete_tmp_files.sh`). The last one
-(`xdag_delete_tmp_files.sh`) is only required to keep your hard drive space in check, by deleting unnecessary tmp files created by the pool daemon.
+are the four CRON scripts mentioned in the chapter above (`xdag_dump_fastdata.sh`, `xdag_dump_slowdata.sh`, `xdag_update_whitelist.sh` and `xdag_delete_tmp_files.sh`).
+The last one (`xdag_delete_tmp_files.sh`) is only required to keep your hard drive space in check, by deleting unnecessary tmp files created by the pool daemon.
 
 Tweak the scripts to export data from your pool daemon. Nginx is required so these text files are downloadable by [OpenXDAGPool](https://github.com/XDagger/openxdagpool).
 
