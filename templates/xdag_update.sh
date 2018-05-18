@@ -9,6 +9,10 @@ if [ "$SURE" != "y" -a "$SURE" != "Y" -a "$SURE" != "yes" -a "$SURE" != "Y" ]; t
         exit 1
 fi
 
+echo Reverting netdb-white.txt and netdb.txt...
+git checkout netdb-white.txt
+git checkout netdb.txt
+
 echo Updating source...
 git pull
 
