@@ -54,25 +54,25 @@ while read -u 10 LINE; do
 		exit 5
 	fi
 
-	if [ "$BYTE1" -lt 1 -o "$BYTE1" -gt 255 ]; then
+	if ["$BYTE1" -gt 255 ]; then
 		rm /var/www/pool/netdb-filtered.txt
 		echo "IP address $IP invalid first byte, not updating whitelist."
 		exit 6
 	fi
 
-	if [ "$BYTE2" -lt 1 -o "$BYTE2" -gt 255 ]; then
+	if [ "$BYTE2" -gt 255 ]; then
 		rm /var/www/pool/netdb-filtered.txt
 		echo "IP address $IP invalid second byte, not updating whitelist."
 		exit 6
 	fi
 
-	if [ "$BYTE3" -lt 1 -o "$BYTE3" -gt 255 ]; then
+	if [ "$BYTE3" -gt 255 ]; then
 		rm /var/www/pool/netdb-filtered.txt
 		echo "IP address $IP invalid third byte, not updating whitelist."
 		exit 6
 	fi
 
-	if [ "$BYTE4" -lt 1 -o "$BYTE4" -gt 255 ]; then
+	if [ "$BYTE4" -gt 255 ]; then
 		rm /var/www/pool/netdb-filtered.txt
 		echo "IP address $IP invalid fourth byte, not updating whitelist."
 		exit 6
