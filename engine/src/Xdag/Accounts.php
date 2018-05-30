@@ -232,6 +232,8 @@ class Accounts
 			$this->accounts = [];
 			throw new XdagException('Unable to parse stored accounts.');
 		}
+
+		return $fresh_setup;
 	}
 
 	protected function setup()
