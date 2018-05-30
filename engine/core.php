@@ -88,7 +88,7 @@ blocks args:
 	processAll
 	- reprocesses each already processed block. Validates previously
 	- invalidated blocks if required, also invalidates previously validated
-	- blocks if required. Designed to be run once a day.
+	- blocks if required. Designed to be run every 3 days.
 	export
 	- exports oldest unexported fully processed and validated found block.
 	- Can be called any time, if operation is currently locked, a proper
