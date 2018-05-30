@@ -12,7 +12,7 @@ return [
 	// of previous accounts (found blocks) here. You may obtain this list
 	// when issuing an 'account 1000000000' command on the xdag daemon
 	// console. For example:
-	// echo -e "account 1000000000\nexit\n" | ./xdag -i | cut -d ' ' -f 1 | tail -n +3 | head -n -1 | sed "s/.*/'&',/" > accounts.txt
+	// echo -e "account 1000000000\nexit\n" | tail -n +2 | head -n -1 | sed -r "s/xdag> (.+)/\\1/" | cut -d ' ' -f 1 | sed "s/.*/'&',/" > accounts.txt
 	'extra_accounts' => [
 		// '7EW1kfcYZeLynTwb1w/fq45j8KkU43w4',
 		// 'rsXkRRrxhDDoDlz51a+bxFmH10Y0mrm0',
