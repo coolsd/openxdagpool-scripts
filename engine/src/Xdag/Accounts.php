@@ -32,6 +32,7 @@ class Accounts
 				$this->accounts[$line[0]] = [
 					'hash' => null,
 					'payouts_sum' => 0,
+					'first_inspected_at' => null,
 					'inspected_times' => 0,
 					'found_at' => null,
 					'exported_at' => null,
@@ -50,9 +51,16 @@ class Accounts
 		$lock->obtain();
 
 		$this->load();
+		$date_threshold = date('Y-m-d H:i:s', strtotime('-10 days'));
 
 		foreach ($this->accounts as $address => $account) {
 			if ($all || (!$account['invalidated_at'] && ($account['inspected_times'] < 3 || !$account['hash']))) {
+				if ($account['first_inspected_at'] && $account['first_inspected_at'] < $date_threshold)
+					continue; // account was processed enough times, skip processing to conserve resources
+
+				if (!$this->accounts[$address]['first_inspected_at'])
+					$this->accounts[$address]['first_inspected_at'] = date('Y-m-d H:i:s');
+
 				try {
 					$block = ($this->get_block)($address);
 				} catch (XdagBlockNotFoundException $ex) {
@@ -236,6 +244,7 @@ class Accounts
 				$this->accounts[$account] = [
 					'hash' => null,
 					'payouts_sum' => 0,
+					'first_inspected_at' => null,
 					'inspected_times' => 0,
 					'found_at' => null,
 					'exported_at' => null,
