@@ -5,7 +5,7 @@ namespace App\Controllers;
 use App\Xdag\Exceptions\XdagException;
 use App\Support\{ExclusiveLock, UnableToObtainLockException};
 
-class BlocksController extends Controller
+class BalanceController extends Controller
 {
 	public function index($address = null)
 	{

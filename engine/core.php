@@ -9,7 +9,7 @@ date_default_timezone_set('UTC');
 
 $config = require_once __DIR__ . '/config.php';
 
-$map = ['livedata' => 'LiveDataController', 'fastdata' => 'FastDataController', 'blocks' => 'BlocksController'];
+$map = ['livedata' => 'LiveDataController', 'fastdata' => 'FastDataController', 'blocks' => 'BlocksController', 'balance' => 'BalanceController'];
 $controller = $map[$argv[1]] ?? null;
 
 if (!$controller) {
