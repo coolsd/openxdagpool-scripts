@@ -112,6 +112,10 @@ blocks args:
 	resetExportInvalidated
 	- resets export of all invalidated blocks. For debugging purposes
 	- only, or when re-importing OpenXDAGPool database.
+	summary
+	- prints a JSON summary of accounts waiting to be exported (including
+	- invalidated), number of valid and invalid accounts, and total number
+	- of accounts. For debugging purposes only.
 	startFresh
 	- remove all accounts and blocks storage and start fresh. For
 	- debugging purposes only.

@@ -176,6 +176,35 @@ class Accounts
 		return false;
 	}
 
+	public function summary()
+	{
+		$to_be_exported = $to_be_exported_invalidated = $valid = $invalid = $total = 0;
+
+		foreach ($this->accounts() as $address => $account) {
+			if (!$account['exported_at'] && $account['inspected_times'] >= 3 && $account['hash'] && !$account['invalidated_at'])
+				$to_be_exported++;
+
+			if ($account['hash'] && $account['invalidated_at'] && !$account['invalidated_exported_at'])
+				$to_be_exported_invalidated++;
+
+			if ($account['hash'])
+				$valid++;
+
+			if ($account['invalidated_at'])
+				$invalid++;
+
+			$total++;
+		}
+
+		return [
+			'to_be_exported' => $to_be_exported,
+			'to_be_exported_invalidated' => $to_be_exported_invalidated,
+			'valid' => $valid,
+			'invalid' => $invalid,
+			'total' => $total,
+		];
+	}
+
 	public function setup()
 	{
 		if (!$this->isFreshInstall())

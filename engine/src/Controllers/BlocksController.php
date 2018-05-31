@@ -26,6 +26,8 @@ class BlocksController extends Controller
 			return $this->resetExport();
 		else if ($action == 'resetExportInvalidated')
 			return $this->resetExportInvalidated();
+		else if ($action == 'summary')
+			return $this->summary();
 		else if ($action == 'startFresh')
 			return $this->startFresh();
 
@@ -73,6 +75,11 @@ class BlocksController extends Controller
 	{
 		$this->accounts->resetExportInvalidated();
 		return $this->responseJson(['result' => 'success', 'message' => 'All invalidated blocks will be exported again on exportInvalidated calls.']);
+	}
+
+	protected function summary()
+	{
+		return $this->responseJson($this->accounts->summary());
 	}
 
 	protected function startFresh()
