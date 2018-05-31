@@ -14,7 +14,11 @@ class BlocksController extends Controller
 	{
 		$this->accounts = new Accounts($this->config, [$this->xdag, 'getAccounts'], [$this->xdag, 'parseBlock']);
 
-		if ($action == 'process')
+		if ($action == 'gather')
+			return $this->gather();
+		else if ($action == 'gatherAll')
+			return $this->gather(true);
+		else if ($action == 'process')
 			return $this->process();
 		else if ($action == 'processAll')
 			return $this->process(true);
@@ -34,23 +38,39 @@ class BlocksController extends Controller
 		return $this->responseJson(['result' => 'invalid-call', 'message' => 'Invalid blocks operation call.']);
 	}
 
+	protected function gather($all = false)
+	{
+		try {
+			$fresh_install = $this->accounts->setup();
+			$this->accounts->gather($fresh_install || $all);
+		} catch (XdagNodeNotReadyException $ex) {
+			$this->responseJson(['result' => 'not-ready', 'message' => 'Node is not ready at this time, blocks operation is not available.']);
+		} catch (UnableToObtainLockException $ex) {
+			$this->responseJson(['result' => 'locked', 'message' => 'Blocks gather operation is currently in progress, please try again later.']);
+		}
+	}
+
 	protected function process($all = false)
 	{
 		try {
-			$this->accounts->setup();
-			$this->accounts->gather($all);
 			$this->accounts->inspect($all);
 		} catch (XdagNodeNotReadyException $ex) {
 			$this->responseJson(['result' => 'not-ready', 'message' => 'Node is not ready at this time, blocks operation is not available.']);
 		} catch (UnableToObtainLockException $ex) {
-			$this->responseJson(['result' => 'locked', 'message' => 'Blocks operation is currently in progress, please try again later.']);
+			$this->responseJson(['result' => 'locked', 'message' => 'Blocks process operation is currently in progress, please try again later.']);
 		}
 	}
 
 	// exports one oldest unexported fully processed and verified account (found block)
 	protected function export()
 	{
-		if ($json = $this->accounts->exportBlock())
+		try {
+			$json = $this->accounts->exportBlock();
+		} catch (UnableToObtainLockException $ex) {
+			$this->responseJson(['result' => 'locked', 'message' => 'Blocks process operation is currently in progress, please try again later.']);
+		}
+
+		if ($json)
 			return $this->response($json);
 
 		return $this->responseJson(['result' => 'empty', 'message' => 'No new blocks.']);
@@ -59,7 +79,13 @@ class BlocksController extends Controller
 	// if a block was invalidated later, export one unexported invalidated found block
 	protected function exportInvalidated()
 	{
-		if ($json = $this->accounts->exportBlockInvalidated())
+		try {
+			$json = $this->accounts->exportBlockInvalidated();
+		} catch (UnableToObtainLockException $ex) {
+			$this->responseJson(['result' => 'locked', 'message' => 'Blocks process operation is currently in progress, please try again later.']);
+		}
+
+		if ($json)
 			return $this->response($json);
 
 		return $this->responseJson(['result' => 'empty', 'message' => 'No new invalidated blocks.']);
@@ -67,13 +93,23 @@ class BlocksController extends Controller
 
 	protected function resetExport()
 	{
-		$this->accounts->resetExport();
+		try {
+			$this->accounts->resetExport();
+		} catch (UnableToObtainLockException $ex) {
+			$this->responseJson(['result' => 'locked', 'message' => 'Blocks process operation is currently in progress, please try again later.']);
+		}
+
 		return $this->responseJson(['result' => 'success', 'message' => 'All blocks will be exported again on export calls.']);
 	}
 
 	protected function resetExportInvalidated()
 	{
-		$this->accounts->resetExportInvalidated();
+		try {
+			$this->accounts->resetExportInvalidated();
+		} catch (UnableToObtainLockException $ex) {
+			$this->responseJson(['result' => 'locked', 'message' => 'Blocks process operation is currently in progress, please try again later.']);
+		}
+
 		return $this->responseJson(['result' => 'success', 'message' => 'All invalidated blocks will be exported again on exportInvalidated calls.']);
 	}
 

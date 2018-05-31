@@ -18,10 +18,10 @@ class Accounts
 
 	public function gather($all = false)
 	{
-		$lock = new ExclusiveLock('accounts', 300);
+		$lock = new ExclusiveLock('accounts_gather', 300);
 		$lock->obtain();
 
-		foreach (($this->get_accounts)($all ? 10000000000 : 5000) as $line) {
+		foreach (($this->get_accounts)($all ? 10000000000 : 10000) as $line) {
 			$line = preg_split('/\s+/', trim($line));
 
 			if (count($line) !== 4)
@@ -44,7 +44,7 @@ class Accounts
 
 	public function inspect($all = false)
 	{
-		$lock = new ExclusiveLock('accounts', 300);
+		$lock = new ExclusiveLock('accounts_process', 300);
 		$lock->obtain();
 
 		$date_threshold = date('Y-m-d H:i:s', strtotime('-5 days'));
@@ -103,7 +103,7 @@ class Accounts
 
 	public function resetExport()
 	{
-		$lock = new ExclusiveLock('accounts', 300);
+		$lock = new ExclusiveLock('accounts_process', 300);
 		$lock->obtain();
 
 		foreach ($this->accounts() as $address => $account) {
@@ -118,7 +118,7 @@ class Accounts
 
 	public function resetExportInvalidated()
 	{
-		$lock = new ExclusiveLock('accounts', 300);
+		$lock = new ExclusiveLock('accounts_process', 300);
 		$lock->obtain();
 
 		foreach ($this->accounts() as $address => $account) {
@@ -133,7 +133,7 @@ class Accounts
 
 	public function exportBlock()
 	{
-		$lock = new ExclusiveLock('accounts', 300);
+		$lock = new ExclusiveLock('accounts_process', 300);
 		$lock->obtain();
 
 		$export_address = $export_account = null;
@@ -161,7 +161,7 @@ class Accounts
 
 	public function exportBlockInvalidated()
 	{
-		$lock = new ExclusiveLock('accounts', 300);
+		$lock = new ExclusiveLock('accounts_process', 300);
 		$lock->obtain();
 
 		foreach ($this->accounts() as $address => $account) {
@@ -212,13 +212,13 @@ class Accounts
 	public function setup()
 	{
 		if (!$this->isFreshInstall())
-			return;
+			return false;
 
 		if (isset($this->config['extra_accounts_file']) && $this->config['extra_accounts_file'] !== '') {
 			$file = @fopen($this->config['extra_accounts_file'], 'r');
 
 			if (!$file)
-				return;
+				return true;
 
 			while (($line = fgets($file, 1024)) !== false) {
 				$line = preg_split('/\s+/', trim($line));
@@ -239,6 +239,8 @@ class Accounts
 				}
 			}
 		}
+
+		return true;
 	}
 
 	protected function invalidateAccount(array &$account)
@@ -300,7 +302,12 @@ class Accounts
 				continue;
 
 			$address = basename($address, '.json');
-			$account = $this->loadAccount($address);
+
+			try {
+				$account = $this->loadAccount($address);
+			} catch (XdagException $ex) {
+				continue;
+			}
 
 			if ($account) {
 				$address = str_replace('_', '/', $address);

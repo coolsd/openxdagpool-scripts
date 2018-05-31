@@ -90,12 +90,18 @@ balance args:
 	- xdag address to retrieve balance for
 
 blocks args:
+	gather
+	- gathers new accounts (10000) using the 'account' command. Designed
+	- to be run every minute.
+	gatherAll
+	- gathers new accounts (all) using the 'account' command. Designed
+	- to be run once a day.
 	process
-	- processes new found blocks. Designed to be called 5 minutes.
+	- processes newly imported accounts. Designed to be run every minute.
 	processAll
-	- reprocesses each already processed block. Validates previously
-	- invalidated blocks if required, also invalidates previously validated
-	- blocks if required. Designed to be run every day.
+	- reprocesses each already processed account. Validates previously
+	- invalidated accounts if required, also invalidates previously validated
+	- accounts if required. Designed to be run once a day.
 	export
 	- exports oldest unexported fully processed and validated found block.
 	- Can be called any time, if operation is currently locked, a proper
@@ -113,12 +119,10 @@ blocks args:
 	- resets export of all invalidated blocks. For debugging purposes
 	- only, or when re-importing OpenXDAGPool database.
 	summary
-	- prints a JSON summary of accounts waiting to be exported (including
-	- invalidated), number of valid and invalid accounts, and total number
-	- of accounts. For debugging purposes only.
+	- prints a JSON summary of the database. For debugging purposes only.
 	startFresh
-	- remove all accounts and blocks storage and start fresh. For
-	- debugging purposes only.
+	- remove all accounts and blocks from the core storage and start
+	- fresh. For debugging purposes only.
 ");
 }
 
