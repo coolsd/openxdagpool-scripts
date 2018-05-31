@@ -17,7 +17,7 @@ On a fresh ubuntu server 16.04 LTS installation, perform the following steps, in
 8. `git clone https://github.com/XDagger/xdag.git xdag1`
 9. `git clone https://github.com/XDagger/xdag.git xdag2` (TWO separate working copies are necessary for proper pool operation)
 9. `echo -n 1 > ~/CURRENT_XDAG`
-10. go to `templates` directory in this repository, and COPY all files to both `xdag1/client` and `xdag2/client`. Edit the `xdag_run.sh` file in both folders with *your* pool settings. Edit the
+10. go to `shell_templates` directory in this repository, and COPY all files to both `xdag1/client` and `xdag2/client`. Edit the `xdag_run.sh` file in both folders with *your* pool settings. Edit the
 `xdag_pool_forward_enable.sh` and `xdag_pool_forward_disable.sh` scripts in both folders with your WAN IP and miners port.
 11. `ln -s /home/pool/storage /home/pool/xdag1/client/storage`
 12. `ln -s /home/pool/storage /home/pool/xdag2/client/storage`
