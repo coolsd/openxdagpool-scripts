@@ -33,6 +33,7 @@ class BlocksController extends Controller
 	protected function process($all = false)
 	{
 		try {
+			$this->accounts->setup();
 			$this->accounts->gather($all);
 			$this->accounts->inspect($all);
 		} catch (XdagNodeNotReadyException $ex) {

@@ -2,7 +2,7 @@
 
 namespace App\Xdag;
 
-use App\Xdag\Exceptions\{XdagBlockNotFoundException, XdagBlockNotLoadedException};
+use App\Xdag\Exceptions\{XdagException, XdagBlockNotFoundException, XdagBlockNotLoadedException};
 
 class Block
 {
@@ -77,7 +77,7 @@ class Block
 		if (!$this->isLoaded())
 			throw new XdagBlockNotLoadedException;
 
-		$file = __ROOT__ . '/storage/block_' . $this->properties['hash'] . '.json';
+		$file = __ROOT__ . '/storage/blocks/' . $this->properties['hash'] . '.json';
 		$data = [
 			'properties' => $this->properties,
 			'transactions' => $this->transactions,
@@ -96,7 +96,7 @@ class Block
 
 	public function load($hash)
 	{
-		$file = __ROOT__ . '/storage/block_' . $hash . '.json';
+		$file = __ROOT__ . '/storage/blocks/' . $hash . '.json';
 		$data = @file_get_contents($file);
 
 		if ($data === false)
@@ -119,7 +119,7 @@ class Block
 		if (!$this->isLoaded())
 			throw new XdagBlockNotLoadedException;
 
-		$file = __ROOT__ . '/storage/block_' . $this->properties['hash'] . '.json';
+		$file = __ROOT__ . '/storage/blocks/' . $this->properties['hash'] . '.json';
 
 		if (!@unlink($file))
 			throw new XdagException('Unable to remove block: ' . $this->properties['hash']);
