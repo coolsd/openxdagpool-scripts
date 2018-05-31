@@ -71,7 +71,7 @@ class Xdag
 	public function getBalance($address)
 	{
 		if (!$this->isAddress($address))
-			throw new XdagException('Invalid address.');
+			throw new \InvalidArgumentException('Invalid address.');
 
 		if (!$this->isReady())
 			throw new XdagNodeNotReadyException;
@@ -153,7 +153,7 @@ class Xdag
 	public function parseBlock($input)
 	{
 		if (!$this->isBlockCommandParameter($input))
-			throw new Exception('Invalid address or block hash.');
+			throw new \InvalidArgumentException('Invalid address or block hash.');
 
 		if (!$this->isReady())
 			throw new XdagNodeNotReadyException;

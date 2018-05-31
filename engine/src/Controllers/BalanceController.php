@@ -22,6 +22,9 @@ class BalanceController extends Controller
 		} catch (XdagException $ex) {
 			$lock->release();
 			return $this->responseJson(['address' => $address, 'balance' => null]);
+		} catch (\InvalidArgumentException $ex) {
+			$lock->release();
+			return $this->responseJson(['address' => $address, 'balance' => null]);
 		}
 
 		return $this->responseJson(['address' => $address, 'balance' => $balance]);

@@ -65,6 +65,10 @@ class Accounts
 					$this->invalidateAccount($account);
 					$this->saveAccount($address, $account, true);
 					continue;
+				} catch (\InvalidArgumentException $ex) {
+					$this->invalidateAccount($account);
+					$this->saveAccount($address, $account, true);
+					continue;
 				}
 
 				if (!$block->hasEarning()) {
@@ -265,8 +269,10 @@ class Accounts
 			$address = basename($address, '.json');
 			$account = $this->loadAccount($address);
 
-			if ($account)
+			if ($account) {
+				$address = str_replace('_', '/', $address);
 				yield $address => $account;
+			}
 		}
 
 		closedir($dir);
