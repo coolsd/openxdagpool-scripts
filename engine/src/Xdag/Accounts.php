@@ -21,7 +21,7 @@ class Accounts
 		$lock = new ExclusiveLock('accounts', 300);
 		$lock->obtain();
 
-		foreach (($this->get_accounts)($all ? 10000000000 : 100) as $line) {
+		foreach (($this->get_accounts)($all ? 10000000000 : 5000) as $line) {
 			$line = preg_split('/\s+/', trim($line));
 
 			if (count($line) !== 4)
@@ -47,7 +47,7 @@ class Accounts
 		$lock = new ExclusiveLock('accounts', 300);
 		$lock->obtain();
 
-		$date_threshold = date('Y-m-d H:i:s', strtotime('-3 days'));
+		$date_threshold = date('Y-m-d H:i:s', strtotime('-5 days'));
 
 		foreach ($this->accounts() as $address => $account) {
 			if ($all || (!$account['invalidated_at'] && ($account['inspected_times'] < 3 || !$account['hash']))) {
