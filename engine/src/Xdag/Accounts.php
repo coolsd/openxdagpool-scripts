@@ -55,8 +55,8 @@ class Accounts
 				if ($account['first_inspected_at'] && $account['first_inspected_at'] < $date_threshold)
 					continue; // account was processed enough times, skip processing to conserve resources
 
-				if (!$all && $account['last_inspected_at'] && $account['last_inspected_at'] > date('Y-m-d H:i:s', strtotime('-10 minutes')))
-					continue; // do not inspect accounts too often, give pool a chance to pay out the miners
+				if (!$all && $account['last_inspected_at'] && $account['last_inspected_at'] > date('Y-m-d H:i:s', strtotime('-10 minutes')) && (!$account['found_at'] || $account['found_at'] > date('Y-m-d H:i:s', strtotime('-1 day')) . '000'))
+					continue; // do not inspect recent accounts too often, give pool a chance to pay out the miners
 
 				if (!$account['first_inspected_at'])
 					$account['first_inspected_at'] = date('Y-m-d H:i:s');
