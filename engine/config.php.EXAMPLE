@@ -3,6 +3,7 @@
 return [
 	// when using default setup, you don't need to change this.
 	'base_dir' => '/home/pool',
+
 	// CURRENT_XDAG file location relative to base_dir
 	// when using default setup, you don't need to change this.
 	'current_xdag_file' => 'CURRENT_XDAG',
