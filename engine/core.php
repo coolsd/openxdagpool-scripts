@@ -22,7 +22,14 @@ spl_autoload_register(function ($class) {
 	if ($class[0] == 'App')
 		$class[0] = 'src';
 
-	require_once __DIR__ . '/' . implode('/', $class) . '.php';
+	$file = __DIR__ . '/' . implode('/', $class) . '.php';
+	if (!@file_exists($file)) {
+		echo "Class not found: " . $file . "\n";
+		debug_print_backtrace();
+		die("\n");
+	}
+
+	require_once $file;
 });
 
 if (!isset($config['base_dir']) || !isset($config['current_xdag_file']))
@@ -105,6 +112,9 @@ blocks args:
 	resetExportInvalidated
 	- resets export of all invalidated blocks. For debugging purposes
 	- only, or when re-importing OpenXDAGPool database.
+	startFresh
+	- remove all accounts and blocks storage and start fresh. For
+	- debugging purposes only.
 ");
 }
 

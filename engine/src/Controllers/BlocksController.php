@@ -26,6 +26,8 @@ class BlocksController extends Controller
 			return $this->resetExport();
 		else if ($action == 'resetExportInvalidated')
 			return $this->resetExportInvalidated();
+		else if ($action == 'startFresh')
+			return $this->startFresh();
 
 		return $this->responseJson(['result' => 'invalid-call', 'message' => 'Invalid blocks operation call.']);
 	}
@@ -71,5 +73,36 @@ class BlocksController extends Controller
 	{
 		$this->accounts->resetExportInvalidated();
 		return $this->responseJson(['result' => 'success', 'message' => 'All invalidated blocks will be exported again on exportInvalidated calls.']);
+	}
+
+	protected function startFresh()
+	{
+		// remove accounts
+		$dir = __ROOT__ . '/storage/accounts/';
+		$dirh = opendir($dir);
+
+		while (($file = readdir($dirh)) !== false) {
+			if (!preg_match('/^[0-9a-z_+]{32}\.json$/siu', $file))
+				continue;
+
+			@unlink($dir . $file);
+		}
+
+		closedir($dirh);
+
+		// remove blocks
+		$dir = __ROOT__ . '/storage/blocks/';
+		$dirh = opendir($dir);
+
+		while (($file = readdir($dirh)) !== false) {
+			if (!preg_match('/^[0-9a-f]{64}\.json$/siu', $file))
+				continue;
+
+			@unlink($dir . $file);
+		}
+
+		closedir($dirh);
+
+		return $this->responseJson(['result' => 'success', 'message' => 'Core storage was deleted.']);
 	}
 }
