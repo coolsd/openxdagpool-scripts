@@ -7,17 +7,11 @@ return [
 	// when using default setup, you don't need to change this.
 	'current_xdag_file' => 'CURRENT_XDAG',
 
-	// if you've used multiple pool wallets and want to import found blocks
-	// and payouts from your previous pool wallets, enter a full list
-	// of previous accounts (found blocks) here. You may obtain this list
-	// when issuing an 'account 1000000000' command on the xdag daemon
-	// console. For example:
-	// echo -e "account 1000000000\nexit\n" | tail -n +2 | head -n -1 | sed -r "s/xdag> (.+)/\\1/" | cut -d ' ' -f 1 | sed "s/.*/'&',/" > accounts.txt
-	'extra_accounts' => [
-		// '7EW1kfcYZeLynTwb1w/fq45j8KkU43w4',
-		// 'rsXkRRrxhDDoDlz51a+bxFmH10Y0mrm0',
-		// ...
-	],
+	// if you've used multiple pool wallets and want to import accounts,
+	// supply a text file relative to base dir here.
+	// Leave only one account addresses per line. For example:
+	// echo -e "account 1000000000\nexit\n" | tail -n +2 | head -n -1 | sed -r "s/xdag> (.+)/\\1/" | cut -d ' ' -f 1 > extra_accounts.txt
+	//'extra_accounts_file' => 'extra_accounts.txt',
 
 	// change to XdagLocal to allow for local development without a running daemon (spoofed data)
 	'xdag_class' => 'Xdag',
