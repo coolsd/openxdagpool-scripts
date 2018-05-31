@@ -2,7 +2,7 @@
 
 for XDAG in 1 2; do
 	DIR="/home/pool/xdag""$XDAG"/
-	LOG="$DIR"/xdag.log
+	LOG="$DIR"/client/xdag.log
 
 	if [ ! -f "$LOG" ]; then
 		continue
