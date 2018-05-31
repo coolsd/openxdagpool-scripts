@@ -45,7 +45,12 @@ class Xdag
 	public function getVersion()
 	{
 		$file = str_replace('"', '\"', dirname($this->socket_file) . '/xdag');
-		$line = shell_exec('echo -e "exit\n" | "' . $file . '" -i | head -n 1');
+		exec('"' . $file . '"', $out);
+
+		if (!$out)
+			return '???';
+
+		$line = current($out);
 		$line = preg_split('/\s+/', trim($line));
 		return rtrim(end($line), '.');
 	}
