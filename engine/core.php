@@ -96,10 +96,10 @@ blocks args:
 	gatherAll
 	- gathers new accounts (all) using the 'account' command. Designed
 	- to be run once a day.
-	process
-	- processes newly imported accounts. Designed to be run every minute.
-	processAll
-	- reprocesses each already processed account. Validates previously
+	inspect
+	- inspects newly imported accounts. Designed to be run every minute.
+	inspectAll
+	- reprocesses each already inspected account. Validates previously
 	- invalidated accounts if required, also invalidates previously validated
 	- accounts if required. Designed to be run once a day.
 	export

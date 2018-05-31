@@ -31,6 +31,7 @@ class Accounts
 				'hash' => null,
 				'payouts_sum' => 0,
 				'first_inspected_at' => null,
+				'last_inspected_at' => null,
 				'inspected_times' => 0,
 				'found_at' => null,
 				'exported_at' => null,
@@ -54,8 +55,13 @@ class Accounts
 				if ($account['first_inspected_at'] && $account['first_inspected_at'] < $date_threshold)
 					continue; // account was processed enough times, skip processing to conserve resources
 
+				if (!$all && $account['last_inspected_at'] && $account['last_inspected_at'] > date('Y-m-d H:i:s', strtotime('-10 minutes')))
+					continue; // do not inspect accounts too often, give pool a chance to pay out the miners
+
 				if (!$account['first_inspected_at'])
 					$account['first_inspected_at'] = date('Y-m-d H:i:s');
+
+				$account['last_inspected_at'] = date('Y-m-d H:i:s');
 
 				$this->saveAccount($address, $account, true);
 
@@ -228,6 +234,7 @@ class Accounts
 						'hash' => null,
 						'payouts_sum' => 0,
 						'first_inspected_at' => null,
+						'last_inspected_at' => null,
 						'inspected_times' => 0,
 						'found_at' => null,
 						'exported_at' => null,

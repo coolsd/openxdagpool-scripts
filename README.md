@@ -35,9 +35,9 @@ Enter the `xdag2/client` directory (still as user `pool`) and copy `wallet.dat`,
 Next type `crontab -e` as user `pool` and enter the following cron schedule:
 ```
 * * * * * /usr/bin/php /home/pool/scripts/engine/core.php blocks gather >> /dev/null 2>&1
-* * * * * /usr/bin/php /home/pool/scripts/engine/core.php blocks process >> /dev/null 2>&1
+* * * * * /usr/bin/php /home/pool/scripts/engine/core.php blocks inspect >> /dev/null 2>&1
 0 0 * * * /usr/bin/php /home/pool/scripts/engine/core.php blocks gatherAll >> /dev/null 2>&1
-0 0 * * * /usr/bin/php /home/pool/scripts/engine/core.php blocks processAll >> /dev/null 2>&1
+0 0 * * * /usr/bin/php /home/pool/scripts/engine/core.php blocks inspectAll >> /dev/null 2>&1
 40 */3 * * * /bin/bash /home/pool/scripts/xdag_update_whitelist.sh
 50 */3 * * * /bin/bash /home/pool/scripts/xdag_archive_logs.sh
 50 2 * * * /bin/bash /home/pool/scripts/xdag_delete_tmp_files.sh

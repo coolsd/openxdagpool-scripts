@@ -18,10 +18,10 @@ class BlocksController extends Controller
 			return $this->gather();
 		else if ($action == 'gatherAll')
 			return $this->gather(true);
-		else if ($action == 'process')
-			return $this->process();
-		else if ($action == 'processAll')
-			return $this->process(true);
+		else if ($action == 'inspect')
+			return $this->inspect();
+		else if ($action == 'inspectAll')
+			return $this->inspect(true);
 		else if ($action == 'export')
 			return $this->export();
 		else if ($action == 'exportInvalidated')
@@ -50,7 +50,7 @@ class BlocksController extends Controller
 		}
 	}
 
-	protected function process($all = false)
+	protected function inspect($all = false)
 	{
 		try {
 			$this->accounts->inspect($all);
