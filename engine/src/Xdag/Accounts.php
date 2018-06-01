@@ -145,7 +145,7 @@ class Accounts
 		$export_address = $export_account = null;
 		foreach ($this->accounts() as $address => $account) {
 			if (!$account['exported_at'] && $account['inspected_times'] >= 3 && $account['hash'] && !$account['invalidated_at']) {
-				if (!$export_address || $account['found_at'] < $export['found_at']) {
+				if (!$export_address || $account['found_at'] < $export_account['found_at']) {
 					$export_address = $address;
 					$export_account = $account;
 				}
