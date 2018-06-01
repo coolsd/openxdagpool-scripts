@@ -266,7 +266,7 @@ class Xdag
 		socket_send($socket, $command, strlen($command), 0);
 
 		while ($line = @socket_read($socket, 1024, PHP_NORMAL_READ))
-			yield $line;
+			yield rtrim($line, "\n");
 
 		socket_close($socket);
 	}
