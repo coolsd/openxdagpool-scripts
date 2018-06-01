@@ -140,10 +140,15 @@ class Accounts
 
 		$export_address = $export_account = null;
 		foreach ($this->accounts('exported_at IS NULL AND inspected_times >= 3 AND hash IS NOT NULL AND invalidated_at IS NULL ORDER BY found_at LIMIT 1') as $address => $account) {
+			$export_address = $address;
+			$export_account = $account;
+		}
+
+		if ($export_address) {
 			$block = new Block();
-			$json = $block->load($account['hash']);
-			$account['exported_at'] = date('Y-m-d H:i:s');
-			$this->saveAccount($address, $account, true);
+			$json = $block->load($export_account['hash']);
+			$export_account['exported_at'] = date('Y-m-d H:i:s');
+			$this->saveAccount($export_address, $export_account, true);
 			$lock->release();
 			return $json;
 		}
@@ -157,11 +162,17 @@ class Accounts
 		$lock = new ExclusiveLock('accounts_process', 300);
 		$lock->obtain();
 
+		$export_address = $export_account = null;
 		foreach ($this->accounts('hash IS NOT NULL AND invalidated_at IS NOT NULL AND invalidated_exported_at IS NULL LIMIT 1') as $address => $account) {
-			$account['invalidated_exported_at'] = date('Y-m-d H:i:s');
-			$this->saveAccount($address, $account, true);
+			$export_address = $address;
+			$export_account = $account;
+		}
+
+		if ($export_address) {
+			$export_account['invalidated_exported_at'] = date('Y-m-d H:i:s');
+			$this->saveAccount($export_address, $export_account, true);
 			$lock->release();
-			return json_encode(['invalidateBlock' => $account['hash']]);
+			return json_encode(['invalidateBlock' => $export_account['hash']]);
 		}
 
 		$lock->release();
@@ -223,7 +234,9 @@ class Accounts
 	protected function isFreshInstall()
 	{
 		$result = $this->runSelect('SELECT id FROM accounts LIMIT 1');
-		return ! (boolean) $result->num_rows;
+		$is_fresh = ! (boolean) $result->fetch_assoc();
+		$result->free();
+		return $is_fresh;
 	}
 
 	protected function invalidateAccount(array &$account)
@@ -269,11 +282,27 @@ class Accounts
 			$query .= ' WHERE ' . $sql;
 
 		$result = $this->runSelect($query);
+
 		while ($account = $result->fetch_assoc()) {
 			$address = $account['address'];
 			unset($account['address']);
 
 			yield $address => $account;
+		}
+
+		$result->free();
+
+		$files = [__ROOT__ . '/storage/updates.sql', __ROOT__ . '/storage/inserts.sql'];
+		foreach ($files as $file) {
+			$f = @fopen($file, 'r');
+			if (!$f)
+				return;
+
+			while ($query = fgets($f, 4096))
+				$this->runInsertOrUpdate($query);
+
+			fclose($f);
+			unlink($file);
 		}
 	}
 
@@ -290,6 +319,18 @@ class Accounts
 		try {
 			return $this->runInsertOrUpdate($query);
 		} catch (QueryException $ex) {
+			if ($this->mysql->errno == 2014) {
+				// looping a result set, store update / insert query for later
+				$file = __ROOT__ . '/storage/' . ($replace ? 'updates' : 'inserts') . '.sql';
+				$file = @fopen($file, 'a');
+
+				if (!$file || !@fwrite($file, $query . "\n"))
+					throw $ex;
+
+				fclose($file);
+				return true;
+			}
+
 			if (!$replace && $this->mysql->errno == 1062) // duplicate entry, expected
 				return true;
 
@@ -321,7 +362,7 @@ class Accounts
 
 	protected function runSelect($query)
 	{
-		$result = $this->mysql->query($query);
+		$result = $this->mysql->query($query, MYSQLI_USE_RESULT);
 
 		if ($result === false)
 			throw new QueryException('Query "' . $query . '" failed. ' . $this->mysql->errno . ': ' . $this->mysql->error);
@@ -342,8 +383,9 @@ class Accounts
 	protected function getRowCount($query)
 	{
 		$result = $this->runSelect($query);
-		$result = $result->fetch_row();
-		return $result === null ? 0 : $result[0];
+		$count = $result->fetch_row();
+		$result->free();
+		return $count === null ? 0 : $count[0];
 	}
 }
 
