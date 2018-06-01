@@ -8,6 +8,15 @@ return [
 	// when using default setup, you don't need to change this.
 	'current_xdag_file' => 'CURRENT_XDAG',
 
+	// enter your MySQL connection information here. Database should be created with:
+	// CREATE DATABASE scripts CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+	'db' => [
+		'host' => 'localhost',
+		'user' => 'scripts',
+		'pass' => 'pass',
+		'db' => 'scripts',
+	],
+
 	// if you've used multiple pool wallets and want to import accounts,
 	// supply a text file relative to base dir here.
 	// Leave only one account addresses per line. For example:

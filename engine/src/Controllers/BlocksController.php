@@ -2,7 +2,7 @@
 
 namespace App\Controllers;
 
-use App\Xdag\Accounts;
+use App\Xdag\{Accounts, AccountsException, QueryException};
 use App\Xdag\Exceptions\XdagNodeNotReadyException;
 use App\Support\UnableToObtainLockException;
 
@@ -12,7 +12,11 @@ class BlocksController extends Controller
 
 	public function index($action = null)
 	{
-		$this->accounts = new Accounts($this->config, [$this->xdag, 'getAccounts'], [$this->xdag, 'parseBlock']);
+		try {
+			$this->accounts = new Accounts($this->config, [$this->xdag, 'getAccounts'], [$this->xdag, 'parseBlock']);
+		} catch (AccountsException $ex) {
+			return $this->responseJson(['result' => 'invalid-config', 'message' => 'Unable to connect to the database. Check your configuration. Message: ' . $ex->getMessage()]);
+		}
 
 		if ($action == 'gather')
 			return $this->gather();
@@ -47,6 +51,8 @@ class BlocksController extends Controller
 			$this->responseJson(['result' => 'not-ready', 'message' => 'Node is not ready at this time, blocks operation is not available.']);
 		} catch (UnableToObtainLockException $ex) {
 			$this->responseJson(['result' => 'locked', 'message' => 'Blocks gather operation is currently in progress, please try again later.']);
+		} catch (QueryException $ex) {
+			$this->responseJson(['result' => 'query-exception', 'message' => 'Query exception: ' . $ex->getMessage()]);
 		}
 	}
 
@@ -58,6 +64,8 @@ class BlocksController extends Controller
 			$this->responseJson(['result' => 'not-ready', 'message' => 'Node is not ready at this time, blocks operation is not available.']);
 		} catch (UnableToObtainLockException $ex) {
 			$this->responseJson(['result' => 'locked', 'message' => 'Blocks process operation is currently in progress, please try again later.']);
+		} catch (QueryException $ex) {
+			$this->responseJson(['result' => 'query-exception', 'message' => 'Query exception: ' . $ex->getMessage()]);
 		}
 	}
 
@@ -68,6 +76,8 @@ class BlocksController extends Controller
 			$json = $this->accounts->exportBlock();
 		} catch (UnableToObtainLockException $ex) {
 			$this->responseJson(['result' => 'locked', 'message' => 'Blocks process operation is currently in progress, please try again later.']);
+		} catch (QueryException $ex) {
+			$this->responseJson(['result' => 'query-exception', 'message' => 'Query exception: ' . $ex->getMessage()]);
 		}
 
 		if ($json)
@@ -83,6 +93,8 @@ class BlocksController extends Controller
 			$json = $this->accounts->exportBlockInvalidated();
 		} catch (UnableToObtainLockException $ex) {
 			$this->responseJson(['result' => 'locked', 'message' => 'Blocks process operation is currently in progress, please try again later.']);
+		} catch (QueryException $ex) {
+			$this->responseJson(['result' => 'query-exception', 'message' => 'Query exception: ' . $ex->getMessage()]);
 		}
 
 		if ($json)
@@ -97,6 +109,8 @@ class BlocksController extends Controller
 			$this->accounts->resetExport();
 		} catch (UnableToObtainLockException $ex) {
 			$this->responseJson(['result' => 'locked', 'message' => 'Blocks process operation is currently in progress, please try again later.']);
+		} catch (QueryException $ex) {
+			$this->responseJson(['result' => 'query-exception', 'message' => 'Query exception: ' . $ex->getMessage()]);
 		}
 
 		return $this->responseJson(['result' => 'success', 'message' => 'All blocks will be exported again on export calls.']);
@@ -108,6 +122,8 @@ class BlocksController extends Controller
 			$this->accounts->resetExportInvalidated();
 		} catch (UnableToObtainLockException $ex) {
 			$this->responseJson(['result' => 'locked', 'message' => 'Blocks process operation is currently in progress, please try again later.']);
+		} catch (QueryException $ex) {
+			$this->responseJson(['result' => 'query-exception', 'message' => 'Query exception: ' . $ex->getMessage()]);
 		}
 
 		return $this->responseJson(['result' => 'success', 'message' => 'All invalidated blocks will be exported again on exportInvalidated calls.']);
@@ -115,23 +131,16 @@ class BlocksController extends Controller
 
 	protected function summary()
 	{
-		return $this->responseJson($this->accounts->summary());
+		try {
+			return $this->responseJson($this->accounts->summary());
+		} catch (QueryException $ex) {
+			$this->responseJson(['result' => 'query-exception', 'message' => 'Query exception: ' . $ex->getMessage()]);
+		}
 	}
 
 	protected function startFresh()
 	{
-		// remove accounts
-		$dir = __ROOT__ . '/storage/accounts/';
-		$dirh = opendir($dir);
-
-		while (($file = readdir($dirh)) !== false) {
-			if (!preg_match('/^[0-9a-z_+]{32}\.json$/siu', $file))
-				continue;
-
-			@unlink($dir . $file);
-		}
-
-		closedir($dirh);
+		$this->accounts->truncate();
 
 		// remove blocks
 		$dir = __ROOT__ . '/storage/blocks/';

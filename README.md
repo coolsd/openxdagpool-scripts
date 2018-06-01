@@ -8,7 +8,7 @@ how xdag pool daemons work in general and be familiar with their settings. This 
 # Full setup
 On a fresh ubuntu server 16.04 LTS installation, perform the following steps, initially as `root`:
 1. set your system timezone to `UTC`, execute `dpkg-reconfigure tzdata` and choose `UTC`
-2. `apt-get install git nginx php7.0-fpm php7.0-cli build-essential libssl-dev gcc`
+2. `apt-get install git nginx php7.0-fpm php7.0-cli build-essential libssl-dev gcc mysql-client mysql-server`
 3. `adduser pool`
 4. `su pool`
 5. `cd /home/pool`
@@ -24,7 +24,8 @@ On a fresh ubuntu server 16.04 LTS installation, perform the following steps, in
 12. make sure `/var/www/pool` exists and is owned by `pool`
 14. make sure a new php7.0-fpm pool is running as user `pool`
 15. make sure nginx config allows execution of `php` files
-16. copy `engine/config.php.EXAMPLE` to `engine/config.php`, read the file and set appropriate values
+16. copy `engine/config.php.EXAMPLE` to `engine/config.php`, read the file and set appropriate values. Configure the mysql server and create a database according to comments. Create one
+database table given in `engine/db_schema.sql`
 
 Once this is done, compile both xdag1 and xdag2 using `make` in the `client` folder. Compile as user `pool`. Execute xdag1 by running `./xdag_run.sh` in `client` folder.
 You don't have to run with the `-r` flag for the first time.

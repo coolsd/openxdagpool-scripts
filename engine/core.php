@@ -100,8 +100,8 @@ blocks args:
 	- inspects newly imported accounts. Designed to be run every minute.
 	inspectAll
 	- reprocesses each already inspected account. Validates previously
-	- invalidated accounts if required, also invalidates previously validated
-	- accounts if required. Designed to be run once a day.
+	- invalidated accounts if required, also invalidates previously
+	- validated accounts if required. Designed to be run once a day.
 	export
 	- exports oldest unexported fully processed and validated found block.
 	- Can be called any time, if operation is currently locked, a proper
