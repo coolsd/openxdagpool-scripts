@@ -37,7 +37,7 @@ class Accounts
 
 			$this->saveAccount($line[0], [
 				'hash' => null,
-				'payouts_sum' => 0,
+				'payouts_sum' => null,
 				// fee will be calculated properly for main blocks that
 				// weren't paid out (pool's fee payouts to personal wallet),
 				// or for main blocks that were paid out, but the personal
@@ -223,7 +223,7 @@ class Accounts
 				try {
 					$this->saveAccount($line[0], [
 						'hash' => null,
-						'payouts_sum' => 0,
+						'payouts_sum' => null,
 						'fee_percent_guessed' => null,
 						'first_inspected_at' => null,
 						'last_inspected_at' => null,
