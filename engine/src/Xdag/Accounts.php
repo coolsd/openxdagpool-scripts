@@ -115,7 +115,7 @@ class Accounts
 				$account['exported_at'] = null;
 
 			$account['payouts_sum'] = $sum;
-			$account['fee_percent_guessed'] = round((1024 - $sum) / 1024 * 100, 5); // TODO: block reward may decrease in the future
+			$account['fee_percent_guessed'] = round((1024 - $sum) / 1024 * 100, 3); // TODO: block reward may decrease in the future
 
 			$this->saveAccount($address, $account, true);
 		}
