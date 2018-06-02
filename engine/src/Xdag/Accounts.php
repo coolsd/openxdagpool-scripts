@@ -38,6 +38,15 @@ class Accounts
 			$this->saveAccount($line[0], [
 				'hash' => null,
 				'payouts_sum' => 0,
+				// fee will be calculated properly for main blocks that
+				// weren't paid out (pool's fee payouts to personal wallet),
+				// or for main blocks that were paid out, but the personal
+				// wallet payout included fees from more than one main block.
+				// if just one main block's fee was paid out to personal
+				// wallet at given time, the block's guessed fee will be 0,
+				// as that payout is indistinguishable from normal miner's
+				// payout.
+				'fee_percent_guessed' => null,
 				'first_inspected_at' => null,
 				'last_inspected_at' => null,
 				'inspected_times' => 0,
@@ -106,6 +115,7 @@ class Accounts
 				$account['exported_at'] = null;
 
 			$account['payouts_sum'] = $sum;
+			$account['fee_percent_guessed'] = round((1024 - $sum) / 1024 * 100, 5); // TODO: block reward may decrease in the future
 
 			$this->saveAccount($address, $account, true);
 		}
@@ -214,6 +224,7 @@ class Accounts
 					$this->saveAccount($line[0], [
 						'hash' => null,
 						'payouts_sum' => 0,
+						'fee_percent_guessed' => null,
 						'first_inspected_at' => null,
 						'last_inspected_at' => null,
 						'inspected_times' => 0,

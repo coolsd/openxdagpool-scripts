@@ -196,16 +196,28 @@ class Block
 				}
 
 				// collect payouts to miners
+				$payouts = [];
 				foreach ($block->getTransactions() as $transaction) {
+					if ($transaction['direction'] == 'input' && $transaction['address'] !== $this->properties['balance_address']) {
+						// don't support address blocks that paid out the pool wallet
+						// some pool wallet payouts will be imported, when just exactly one
+						// pool block was paid out in an address block,
+						// as those payouts are indistinguishable from normal miner payouts
+						$payouts = [];
+						break;
+					}
+
 					if ($transaction['direction'] != 'output')
 						continue;
 
-					$this->payouts[] = [
+					$payouts[] = [
 						'address' => trim($transaction['address']),
 						'time' => $address['time'],
 						'amount' => strtolower(trim($transaction['amount'])),
 					];
 				}
+
+				$this->payouts = array_merge($this->payouts, $payouts);
 			}
 
 			// persist fully processed main block
