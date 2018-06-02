@@ -192,12 +192,12 @@ class Accounts
 	public function summary()
 	{
 		return [
-			'not_fully_inspected' => $this->getRowCount('SELECT COUNT(*) FROM accounts WHERE invalidated_at IS NULL AND inspected_times < 3 AND hash IS NULL'),
-			'to_be_exported' => $this->getRowCount('SELECT COUNT(*) FROM accounts WHERE exported_at IS NULL AND inspected_times >= 3 AND hash IS NOT NULL AND invalidated_at IS NULL'),
-			'to_be_exported_invalidated' => $this->getRowCount('SELECT COUNT(*) FROM accounts WHERE hash IS NOT NULL AND invalidated_at IS NOT NULL AND invalidated_exported_at IS NULL'),
-			'valid' => $this->getRowCount('SELECT COUNT(*) FROM accounts WHERE hash IS NOT NULL'),
-			'invalid' => $this->getRowCount('SELECT COUNT(*) FROM accounts WHERE invalidated_at IS NOT NULL'),
-			'total' => $this->getRowCount('SELECT COUNT(*) FROM accounts'),
+			'not_fully_inspected' => (int) $this->getRowCount('SELECT COUNT(*) FROM accounts WHERE invalidated_at IS NULL AND inspected_times < 3 AND hash IS NULL'),
+			'to_be_exported' => (int) $this->getRowCount('SELECT COUNT(*) FROM accounts WHERE exported_at IS NULL AND inspected_times >= 3 AND hash IS NOT NULL AND invalidated_at IS NULL'),
+			'to_be_exported_invalidated' => (int) $this->getRowCount('SELECT COUNT(*) FROM accounts WHERE hash IS NOT NULL AND invalidated_at IS NOT NULL AND invalidated_exported_at IS NULL'),
+			'valid' => (int) $this->getRowCount('SELECT COUNT(*) FROM accounts WHERE hash IS NOT NULL'),
+			'invalid' => (int) $this->getRowCount('SELECT COUNT(*) FROM accounts WHERE invalidated_at IS NOT NULL'),
+			'total' => (int) $this->getRowCount('SELECT COUNT(*) FROM accounts'),
 		];
 	}
 
