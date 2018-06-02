@@ -356,7 +356,7 @@ class Accounts
 
 	protected function accountToQuery(array $account)
 	{
-		$keys = ['hash', 'payouts_sum', 'first_inspected_at', 'last_inspected_at', 'inspected_times', 'found_at', 'exported_at', 'invalidated_at', 'invalidated_exported_at'];
+		$keys = ['hash', 'payouts_sum', 'fee_percent_guessed', 'first_inspected_at', 'last_inspected_at', 'inspected_times', 'found_at', 'exported_at', 'invalidated_at', 'invalidated_exported_at'];
 		$parts = [];
 
 		foreach ($account as $key => $value) {
