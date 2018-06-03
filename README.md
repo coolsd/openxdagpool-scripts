@@ -33,7 +33,7 @@ Set up your password, type random keys (at least 3 lines of random keys), wait f
 
 Enter the `xdag2/client` directory (still as user `pool`) and copy `wallet.dat`, `dnet_key.dat` from `xdag1/client`.
 
-Next type `crontab -e` as user `pool` and enter the following cron schedule:
+After that, go to `/home/pool/scripts/engine` directory (as user `pool`) and execute `php core.php blocks gather`. Wait for the command to complete. Type `crontab -e` as user `pool` and enter the following cron schedule:
 ```
 * * * * * /usr/bin/php /home/pool/scripts/engine/core.php blocks gather >> /dev/null 2>&1
 * * * * * /usr/bin/php /home/pool/scripts/engine/core.php blocks inspect >> /dev/null 2>&1
