@@ -8,7 +8,7 @@ how xdag pool daemons work in general and be familiar with their settings. This 
 # Full setup
 On a fresh ubuntu server 16.04 LTS installation, perform the following steps, initially as `root`:
 1. set your system timezone to `UTC`, execute `dpkg-reconfigure tzdata` and choose `UTC`
-2. `apt-get install git nginx php7.0-fpm php7.0-cli build-essential libssl-dev gcc mysql-client mysql-server`
+2. `apt-get install git nginx php7.0-fpm php7.0-cli php7.0-mysql php7.0-opcache build-essential libssl-dev gcc mysql-client mysql-server`. Set `php.ini` to your preference, set `memory_limit` at least `512M`, make sure functions `exec` and `passthru` are not disabled, and make sure the `open_basedir` directive is empty.
 3. `adduser pool`
 4. `su pool`
 5. `cd /home/pool`
