@@ -1,7 +1,7 @@
 #!/bin/bash
 
 for XDAG in 1 2; do
-	DIR="/home/pool/xdag""$XDAG"/
+	DIR="/root/xdag""$XDAG"/
 	LOG="$DIR"/client/xdag.log
 
 	if [ ! -f "$LOG" ]; then
